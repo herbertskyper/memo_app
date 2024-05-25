@@ -17,8 +17,9 @@ class HistoryPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.all(50),
+          padding: const EdgeInsets.all(15),
           child: Text('You have '
               '${appState.history2.length} history:'),
         ),

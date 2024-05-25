@@ -3,6 +3,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'historypage.dart';
 import 'favoritepage.dart';
@@ -37,16 +38,35 @@ class MyAppState extends ChangeNotifier {
   var history1 = <String>[]; // 用于存储输入的内容
   var history2 = <String>[]; // 用于存储历史记录
 
-  GlobalKey? historyListKey;
+  MyAppState() {
+    loadData();
+  }
 
-  void getNext() {
-    history.insert(0, current);
-    var animatedList = historyListKey?.currentState
-        as AnimatedListState?; //?表示如果historyListKey?.currentState为null，则返回null
-    animatedList?.insertItem(0);
-    current = WordPair.random();
+  //GlobalKey? historyListKey;
+
+  Future<void> saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('favorites', favorites);
+    prefs.setStringList('history1', history1);
+    prefs.setStringList('history2', history2);
+  }
+
+  Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    favorites = prefs.getStringList('favorites') ?? [];
+    history1 = prefs.getStringList('history1') ?? [];
+    history2 = prefs.getStringList('history2') ?? [];
     notifyListeners();
   }
+
+  // void getNext() {
+  //   history.insert(0, current);
+  //   var animatedList = historyListKey?.currentState
+  //       as AnimatedListState?; //?表示如果historyListKey?.currentState为null，则返回null
+  //   animatedList?.insertItem(0);
+  //   current = WordPair.random();
+  //   notifyListeners();
+  // }
 
   void toggleFavorite(String pair) {
     if (favorites.contains(pair)) {
@@ -54,34 +74,45 @@ class MyAppState extends ChangeNotifier {
     } else {
       favorites.add(pair);
     }
+    savedata();
     notifyListeners();
   }
 
   void removeFavorite(String value) {
     favorites.remove(value);
+    savedata();
     notifyListeners();
   }
 
   void removeHistory(String value) {
     history2.remove(value);
+    savedata();
     notifyListeners();
   }
 
   void storeThing(String value) {
     history1.insert(0, value);
+    savedata();
     notifyListeners();
   }
 
   void storeHistory(String value) {
     history2.insert(0, value);
     history1.remove(value);
+    savedata();
     notifyListeners();
   }
 
   void recoverHistory(String value) {
     history1.insert(0, value);
     history2.remove(value);
+    savedata();
     notifyListeners();
+  }
+
+  void savedata()
+  {
+    saveData();
   }
 }
 
@@ -210,7 +241,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 15),
           Text('Made by Skyper'),
           Text(
             'To Do list',
