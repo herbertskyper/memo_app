@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:english_words/english_words.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'historypage.dart';
@@ -130,11 +128,11 @@ class _MyHomePageState extends State<MyHomePage> {
           if (constraints.maxWidth < 450) {
             // Use a more mobile-friendly layout with BottomNavigationBar
             // on narrow screens.
-            return Column(
-              children: [
-                Expanded(child: mainArea),
-                SafeArea(
-                  child: BottomNavigationBar(
+            return SafeArea(
+              child: Column(
+                children: [
+                  Expanded(child: mainArea),
+                  BottomNavigationBar(
                     items: [
                       BottomNavigationBarItem(
                         icon: Icon(Icons.home),
@@ -156,8 +154,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                   ),
-                )
-              ],
+                ],
+              ),
             );
           } else {
             return Row(
@@ -212,6 +210,8 @@ class _GeneratorPageState extends State<GeneratorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: 30),
+          Text('Made by Skyper'),
           Text(
             'To Do list',
             style: TextStyle(
@@ -256,13 +256,13 @@ class _InputItemState extends State<InputItem> {
     var theme = Theme.of(context);
     var appState = context.watch<MyAppState>();
     var style = theme.textTheme.displayMedium!
-        .copyWith(color: theme.colorScheme.primary, fontSize: 14);
+        .copyWith(color: theme.colorScheme.primary, fontSize: 12);
     AutomaticKeepAliveClientMixin;
 
     return Card(
       color: theme.colorScheme.surface,
       child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(5),
           child: ListTile(
             title: SizedBox(
               child: TextField(
@@ -310,7 +310,7 @@ class ToDoItem extends StatelessWidget {
     var theme = Theme.of(context);
     var style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.primary,
-      fontSize: 25,
+      fontSize: 18,
     );
     var appState = context.watch<MyAppState>();
 
@@ -324,7 +324,7 @@ class ToDoItem extends StatelessWidget {
     return Card(
       color: theme.colorScheme.surface,
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(1),
         child: ListTile(
           leading: IconButton(
             onPressed: () {
@@ -333,7 +333,7 @@ class ToDoItem extends StatelessWidget {
             icon: Icon(icon),
           ),
           title: SizedBox(
-            child: Text(
+            child: SelectableText(
               pair,
               style: style,
             ),

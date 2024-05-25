@@ -1,6 +1,5 @@
 import 'main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -19,7 +18,7 @@ class HistoryPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(50),
           child: Text('You have '
               '${appState.history2.length} history:'),
         ),
@@ -43,7 +42,7 @@ class HistoryPage extends StatelessWidget {
                       }
                     },
                   ),
-                  title: Text(
+                  title: SelectableText(
                     value,
                     semanticsLabel: value,
                   ),

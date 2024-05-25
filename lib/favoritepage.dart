@@ -1,6 +1,5 @@
 import 'main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FavoritesPage extends StatelessWidget {
@@ -19,7 +18,7 @@ class FavoritesPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(50),
           child: Text('You have '
               '${appState.favorites.length} favorites:'),
         ),
@@ -40,7 +39,7 @@ class FavoritesPage extends StatelessWidget {
                       appState.removeFavorite(pair);
                     },
                   ),
-                  title: Text(
+                  title: SelectableText(
                     pair,
                     semanticsLabel: pair,
                   ),
