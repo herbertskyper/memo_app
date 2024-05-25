@@ -1,16 +1,27 @@
 # my_memo
 
-A new Flutter project.
+这是一个由flutter写的app，是一个todo list,具有一个todo list的基本功能
 
-## Getting Started
+## 产品展示
 
-This project is a starting point for a Flutter application.
+![Product Showcase](resources/1.jpg)
+![Product Showcase](resources/2.jpg)
+![Product Showcase](resources/3.jpg)
 
-A few resources to get you started if this is your first Flutter project:
+(甚至作者做了横屏适配，他真的，我哭死)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 使用说明
+这么简单易懂的app还需要说明？
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## 参考
+flutter中文官网
+
+## 待优化
+- [ ] 界面美化
+- [ ] 可伸缩长度的输入框
+  
+以下为异想天开的想法（
+- [ ] 与日历联动
+- [ ] 数据库存储数据
+- [ ] 云端同步
