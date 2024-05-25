@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:english_words/english_words.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+
+import 'historypage.dart';
+import 'favoritepage.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,8 +34,10 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+  var favorites = <String>[];
   var history = <WordPair>[];
   var history1 = <String>[]; // 用于存储输入的内容
+  var history2 = <String>[]; // 用于存储历史记录
 
   GlobalKey? historyListKey;
 
@@ -44,10 +50,7 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  var favorites = <WordPair>[];
-
-  void toggleFavorite([WordPair? pair]) {
-    pair = pair ?? current;
+  void toggleFavorite(String pair) {
     if (favorites.contains(pair)) {
       favorites.remove(pair);
     } else {
@@ -57,17 +60,29 @@ class MyAppState extends ChangeNotifier {
   }
 
   void removeFavorite(String value) {
-    history1.remove(value);
+    favorites.remove(value);
     notifyListeners();
   }
 
   void removeHistory(String value) {
-    history1.remove(value);
+    history2.remove(value);
     notifyListeners();
   }
 
   void storeThing(String value) {
     history1.insert(0, value);
+    notifyListeners();
+  }
+
+  void storeHistory(String value) {
+    history2.insert(0, value);
+    history1.remove(value);
+    notifyListeners();
+  }
+
+  void recoverHistory(String value) {
+    history1.insert(0, value);
+    history2.remove(value);
     notifyListeners();
   }
 }
@@ -90,6 +105,9 @@ class _MyHomePageState extends State<MyHomePage> {
         page = GeneratorPage();
         break;
       case 1:
+        page = HistoryPage();
+        break;
+      case 2:
         page = FavoritesPage();
         break;
       default:
@@ -124,7 +142,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.history),
-                        label: 'Favorites',
+                        label: 'history',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.favorite),
+                        label: 'favorite',
                       ),
                     ],
                     currentIndex: selectedIndex,
@@ -150,7 +172,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.history),
-                        label: Text('Favorites'),
+                        label: Text('history'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.favorite),
+                        label: Text('favorite'),
                       ),
                     ],
                     selectedIndex: selectedIndex,
@@ -171,19 +197,38 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class GeneratorPage extends StatelessWidget {
+class GeneratorPage extends StatefulWidget {
+  @override
+  State<GeneratorPage> createState() => _GeneratorPageState();
+}
+
+class _GeneratorPageState extends State<GeneratorPage> {
+  List<Widget> toDoItems = [];
+
   @override
   Widget build(BuildContext context) {
-    //var appState = context.watch<MyAppState>();
-
+    var appState = context.watch<MyAppState>();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(
+            'To Do list',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
           SizedBox(height: 10),
+          Expanded(
+            child: ListView(
+              children: [
+                for (var value in appState.history1) ToDoItem(pair: value),
+              ],
+            ),
+          ),
           InputItem(),
-          SizedBox(height: 10),
-          Spacer(flex: 2),
         ],
       ),
     );
@@ -217,11 +262,10 @@ class _InputItemState extends State<InputItem> {
     return Card(
       color: theme.colorScheme.surface,
       child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            ListTile(
-              title: TextField(
+          padding: const EdgeInsets.all(10),
+          child: ListTile(
+            title: SizedBox(
+              child: TextField(
                 controller: myController,
                 onChanged: (value) {
                   print("Text field value: $value");
@@ -234,78 +278,75 @@ class _InputItemState extends State<InputItem> {
                 ),
                 style: style,
               ),
-              trailing: IconButton(
-                icon: Icon(Icons.add, semanticLabel: 'Add'),
-                color: theme.colorScheme.primary,
-                onPressed: () {
-                  if (content != '') {
-                    appState.storeThing(content);
-                    myController.clear();
-                  } else {
-                    print("add empty!");
-                  }
-                },
-              ),
-            )
-          ],
-        ),
-      ),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.add, semanticLabel: 'Add'),
+              color: theme.colorScheme.primary,
+              onPressed: () {
+                if (content != '') {
+                  appState.storeThing(content);
+                  myController.clear();
+                } else {
+                  print("add empty!");
+                }
+                content = '';
+              },
+            ),
+          )),
     );
   }
 }
 
-class FavoritesPage extends StatelessWidget {
+class ToDoItem extends StatelessWidget {
+  const ToDoItem({
+    Key? key,
+    required this.pair,
+  }) : super(key: key);
+
+  final String pair;
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.primary,
+      fontSize: 25,
+    );
     var appState = context.watch<MyAppState>();
 
-    if (appState.history1.isEmpty) {
-      return Center(
-        child: Text('No history yet.'),
-      );
+    IconData icon;
+    if (appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(30),
-          child: Text('You have '
-              '${appState.history1.length} history:'),
-        ),
-        Expanded(
-          // Make better use of wide windows with a grid.
-          child: ListView(
-            // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            //   maxCrossAxisExtent: 400,
-            //   childAspectRatio: 400 / 80,
-            // ),
-            children: [
-              for (var value in appState.history1)
-                ListTile(
-                  leading: IconButton(
-                    icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
-                    color: theme.colorScheme.primary,
-                    onPressed: () {
-                      appState.removeHistory(value);
-                    },
-                  ),
-                  title: Text(
-                    value,
-                    semanticsLabel: value,
-                  ),
-                  trailing: IconButton(
-                      icon: Icon(Icons.undo, semanticLabel: 'Undo'),
-                      color: theme.colorScheme.primary,
-                      onPressed: () {
-                        //appState.removeFavorite(pair);
-                      }),
-                ),
-            ],
+    return Card(
+      color: theme.colorScheme.surface,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListTile(
+          leading: IconButton(
+            onPressed: () {
+              appState.toggleFavorite(pair);
+            },
+            icon: Icon(icon),
           ),
+          title: SizedBox(
+            child: Text(
+              pair,
+              style: style,
+            ),
+          ),
+          trailing: IconButton(
+              icon: Icon(Icons.delete_outlined, semanticLabel: 'Delete'),
+              color: theme.colorScheme.primary,
+              onPressed: () {
+                appState.storeHistory(pair);
+                appState.removeFavorite(pair);
+              }),
         ),
-      ],
+      ),
     );
   }
 }
