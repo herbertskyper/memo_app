@@ -110,8 +110,7 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void savedata()
-  {
+  void savedata() {
     saveData();
   }
 }
@@ -139,6 +138,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         page = FavoritesPage();
         break;
+      case 3:
+        page = SupportPage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -164,10 +166,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(child: mainArea),
                   BottomNavigationBar(
+                    type: BottomNavigationBarType.fixed,   //使四个图标时不透明
                     items: [
                       BottomNavigationBarItem(
                         icon: Icon(Icons.home),
-                        label: 'Home',
+                        label: 'home',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.history),
@@ -176,6 +179,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       BottomNavigationBarItem(
                         icon: Icon(Icons.favorite),
                         label: 'favorite',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.monetization_on),
+                        label: 'support',
                       ),
                     ],
                     currentIndex: selectedIndex,
@@ -197,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     destinations: [
                       NavigationRailDestination(
                         icon: Icon(Icons.home),
-                        label: Text('Home'),
+                        label: Text('home'),
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.history),
@@ -206,6 +213,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       NavigationRailDestination(
                         icon: Icon(Icons.favorite),
                         label: Text('favorite'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.monetization_on),
+                        label: Text('support'),
                       ),
                     ],
                     selectedIndex: selectedIndex,
@@ -378,6 +389,24 @@ class ToDoItem extends StatelessWidget {
               }),
         ),
       ),
+    );
+  }
+}
+
+
+class SupportPage extends StatefulWidget {
+  @override
+  State<SupportPage> createState() => _SupportPageState();
+}
+
+class _SupportPageState extends State<SupportPage> {
+  List<Widget> toDoItems = [];
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    return Center(
+      child: Image.asset("resources/support.png"),
     );
   }
 }
