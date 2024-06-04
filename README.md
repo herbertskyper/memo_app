@@ -4,9 +4,9 @@
 
 ## 产品展示
 
-![Product Showcase](resources/1.jpg)
-![Product Showcase](resources/2.jpg)
-![Product Showcase](resources/3.jpg)
+<img src="resources/1.jpg" width="200">
+<img src="resources/2.jpg" width="200">
+<img src="resources/3.jpg" width="200">
 
 (甚至作者做了横屏适配，他真的，我哭死)
 
@@ -18,6 +18,7 @@
 flutter中文官网
 
 ## 待优化
+- [x] 增加"支持作者"页面
 - [ ] 界面美化
 - [ ] 可伸缩长度的输入框
   
