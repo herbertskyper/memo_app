@@ -4,9 +4,7 @@
 
 ## 产品展示
 
-<img src="resources/1.jpg" width="200">
-<img src="resources/2.jpg" width="200">
-<img src="resources/3.jpg" width="200">
+<img src="resources/1.jpg" width="200"> <img src="resources/2.jpg" width="200"> <img src="resources/3.jpg" width="200">
 
 (甚至作者做了横屏适配，他真的，我哭死)
 
